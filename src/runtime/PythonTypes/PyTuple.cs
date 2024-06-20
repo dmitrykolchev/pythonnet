@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -22,6 +23,58 @@ namespace Python.Runtime
         /// </remarks>
         internal PyTuple(BorrowedReference reference) : base(reference) { }
         protected PyTuple(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        public static PyTuple Create(params object[] args)
+        {
+            List<PyObject> list = new();
+            foreach (object arg in args)
+            {
+                Type argType = arg.GetType();
+                TypeCode code = Type.GetTypeCode(argType);
+                switch (code)
+                {
+                    case TypeCode.Boolean:
+                        list.Add(new PyInt((bool)arg ? 1 : 0));
+                        break;
+                    case TypeCode.Int16:
+                        list.Add(new PyInt((short)arg));
+                        break;
+                    case TypeCode.Int32:
+                        list.Add(new PyInt((int)arg));
+                        break;
+                    case TypeCode.Int64:
+                        list.Add(new PyInt((long)arg));
+                        break;
+                    case TypeCode.Single:
+                        list.Add(new PyFloat((float)arg));
+                        break;
+                    case TypeCode.Double:
+                        list.Add(new PyFloat((double)arg));
+                        break;
+                    case TypeCode.Decimal:
+                        list.Add(new PyFloat(((decimal)arg).ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                        break;
+                    case TypeCode.String:
+                        list.Add(new PyString((string)arg));
+                        break;
+                    default:
+                        if (arg is PyObject po)
+                        {
+                            list.Add(po);
+                        }
+                        else if (arg is byte[] array)
+                        {
+                            list.Add(PyBytes.FromArray(array));
+                        }
+                        else
+                        {
+                            throw new InvalidCastException();
+                        }
+                        break;
+                }
+            }
+            return new PyTuple(list.ToArray());
+        }
 
         private static BorrowedReference FromObject(PyObject o)
         {

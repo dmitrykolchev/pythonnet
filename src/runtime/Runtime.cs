@@ -1287,6 +1287,22 @@ namespace Python.Runtime
 
         internal static nint PyBytes_Size(BorrowedReference op) => Delegates.PyBytes_Size(op);
 
+        internal static ReadOnlySpan<byte> PyBytes_AsStringAndSize(BorrowedReference op)
+        {
+            byte* bytes;
+            nint size;
+            int result = Delegates.PyBytes_AsStringAndSize(op, &bytes, &size);
+            return new ReadOnlySpan<byte>(bytes, size.ToInt32());
+        }
+
+        internal unsafe static NewReference PyBytes_FromStringAndSize(ReadOnlySpan<byte> src)
+        {
+            fixed(byte* ptr = src)
+            {
+                return Delegates.PyBytes_FromStringAndSize(ptr, src.Length);
+            }
+        }
+
         internal static IntPtr PyUnicode_AsUTF8(BorrowedReference unicode) => Delegates.PyUnicode_AsUTF8(unicode);
 
         /// <summary>Length in code points</summary>

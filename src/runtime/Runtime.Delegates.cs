@@ -159,6 +159,8 @@ public unsafe partial class Runtime
             PySequence_List = (delegate* unmanaged[Cdecl]<BorrowedReference, NewReference>)GetFunctionByName(nameof(PySequence_List), GetUnmanagedDll(_PythonDll));
             PyBytes_AsString = (delegate* unmanaged[Cdecl]<BorrowedReference, IntPtr>)GetFunctionByName(nameof(PyBytes_AsString), GetUnmanagedDll(_PythonDll));
             PyBytes_FromString = (delegate* unmanaged[Cdecl]<IntPtr, NewReference>)GetFunctionByName(nameof(PyBytes_FromString), GetUnmanagedDll(_PythonDll));
+            PyBytes_AsStringAndSize = (delegate* unmanaged[Cdecl]<BorrowedReference, byte**, nint*, int>)GetFunctionByName(nameof(PyBytes_AsStringAndSize), GetUnmanagedDll(_PythonDll));
+            PyBytes_FromStringAndSize = (delegate* unmanaged[Cdecl]<byte*, nint, NewReference>)GetFunctionByName(nameof(PyBytes_FromStringAndSize), GetUnmanagedDll(_PythonDll));
             PyByteArray_FromStringAndSize = (delegate* unmanaged[Cdecl]<IntPtr, nint, NewReference>)GetFunctionByName(nameof(PyByteArray_FromStringAndSize), GetUnmanagedDll(_PythonDll));
             PyBytes_Size = (delegate* unmanaged[Cdecl]<BorrowedReference, nint>)GetFunctionByName(nameof(PyBytes_Size), GetUnmanagedDll(_PythonDll));
             PyUnicode_AsUTF8 = (delegate* unmanaged[Cdecl]<BorrowedReference, IntPtr>)GetFunctionByName(nameof(PyUnicode_AsUTF8), GetUnmanagedDll(_PythonDll));
@@ -436,6 +438,8 @@ public unsafe partial class Runtime
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, NewReference> PySequence_List { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, IntPtr> PyBytes_AsString { get; }
         internal static delegate* unmanaged[Cdecl]<IntPtr, NewReference> PyBytes_FromString { get; }
+        internal static delegate* unmanaged[Cdecl]<BorrowedReference, byte**, nint*, int> PyBytes_AsStringAndSize { get; }
+        internal static delegate* unmanaged[Cdecl]<byte*, nint, NewReference> PyBytes_FromStringAndSize { get; }
         internal static delegate* unmanaged[Cdecl]<IntPtr, nint, NewReference> PyByteArray_FromStringAndSize { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, nint> PyBytes_Size { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, IntPtr> PyUnicode_AsUTF8 { get; }

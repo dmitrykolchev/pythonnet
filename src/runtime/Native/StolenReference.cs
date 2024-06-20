@@ -10,7 +10,7 @@ namespace Python.Runtime
     /// and internal <see cref="PyObject"/> constructors.
     /// </summary>
     [NonCopyable]
-    readonly ref struct StolenReference
+    readonly struct StolenReference
     {
         internal readonly IntPtr Pointer;
 

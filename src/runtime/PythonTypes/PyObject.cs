@@ -30,10 +30,10 @@ namespace Python.Runtime
         protected IntPtr rawPtr = IntPtr.Zero;
         internal readonly int run = Runtime.GetRun();
 
-        internal BorrowedReference obj => new (rawPtr);
+        internal BorrowedReference obj => new(rawPtr);
 
-        public static PyObject None => new (Runtime.PyNone);
-        internal BorrowedReference Reference => new (rawPtr);
+        public static PyObject None => new(Runtime.PyNone);
+        internal BorrowedReference Reference => new(rawPtr);
 
         /// <summary>
         /// PyObject Constructor
@@ -235,7 +235,7 @@ namespace Python.Runtime
         {
             GC.SuppressFinalize(this);
             Dispose(true);
-            
+
         }
 
         internal StolenReference Steal()
@@ -746,8 +746,15 @@ namespace Python.Runtime
             if (args.Contains(null)) throw new ArgumentNullException();
 
             var t = new PyTuple(args);
-            using var r = Runtime.PyObject_Call(obj, t.obj, null);
+            using var r = Runtime.PyObject_CallObject(obj, t.obj);
             t.Dispose();
+            return new PyObject(r.StealOrThrow());
+        }
+
+        public PyObject Invoke(params object[] args)
+        {
+            using PyTuple tuple = PyTuple.Create(args);
+            using var r = Runtime.PyObject_CallObject(obj, tuple.obj);
             return new PyObject(r.StealOrThrow());
         }
 
