@@ -73,7 +73,9 @@ namespace Python.Runtime
                         break;
                 }
             }
-            return new PyTuple(list.ToArray());
+            PyTuple result = new PyTuple(list.ToArray());
+            list.ForEach(t => t?.Dispose());
+            return result;
         }
 
         private static BorrowedReference FromObject(PyObject o)
